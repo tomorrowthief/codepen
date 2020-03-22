@@ -116,7 +116,7 @@ class BST {
             s2.pop().show();
         }
     }
-} 
+}
 
 const bstTree = new BST();
 
