@@ -6,6 +6,9 @@
  * @returns {Promise}
  */
 
+
+const log = console.log;
+
 function throttleFetch (urls, limit) {
     if (!Array.isArray(urls)) throw 'input mast array';
     const urlsTmp = [].concat(urls);
@@ -45,7 +48,7 @@ async function throttleFetch1 (urls, limit) {
 
     while(urlsTmp.length) {
         const url = urlsTmp.shift();
-        const p = Promise.resolve().then(() => fetchUrl(url));
+        const p = Promise.resolve().then(() => fetchUrl(url).catch(e => Promise.resolve(e)));
         ret.push(p); // 推入 ret
         
         // 关键：推入limit队列，当某个promise完成则移出队列，为下一个请求提供空间
@@ -66,6 +69,7 @@ function fetchUrl(url) {
         reslove, reject
     ) => {
         try {
+            if (Math.random() > 0.5)  throw 'err' + url
             setTimeout(() => {
                 reslove(url);
             }, url * 200);
@@ -75,4 +79,5 @@ function fetchUrl(url) {
     });
 }
 
-throttleFetch1([1, 3, 5, 8, 6, 4, 2, 7]).then(res => console.log(res));
+
+throttleFetch1([1, 3, 5, 8, 6, 4, 2, 7]).then(log).catch(log);
